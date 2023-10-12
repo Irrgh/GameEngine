@@ -1,15 +1,9 @@
 package engine;
 
-import org.joml.AxisAngle4f;
-import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import org.lwjgl.BufferUtils;
+import renderer.Vao;
 import renderer.Shader;
 import util.Time;
-
-import java.awt.event.KeyEvent;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -24,16 +18,18 @@ public class TestScene extends Scene {
 
     private Shader defaultShader;
 
+    private Vao vao;
+
     private float[] vertexArray = {
-        //position               //color
-         1.5f, -1.5f, 0.0f,      1.0f, 0.0f, 1.0f, 0.5f,  // Bottom right
-         -1.5f, 1.5f, 0.0f,      0.0f, 1.0f, 0.0f, 0.5f,  // Top left
-         1.5f, 1.5f, 0.0f,      0.0f, 0.0f, 1.0f, 0.5f,  // Top right
-        -1.5f, -1.5f, -0.0f,      1.0f, 1.0f, 0.0f, 0.5f,   // Bottom left
-         0.0f,-1.5f, 1.5f,      1.0f, 0.0f, 1.0f, 0.5f,  // Bottom right
-         0.0f,1.5f,  -1.5f,     0.0f, 1.0f, 0.0f, 0.5f,  // Top left
-        0.0f, 1.5f,  1.5f,     0.0f, 0.0f, 1.0f, 0.5f,  // Top right
-        -0.0f, -1.5f,  -1.5f,      1.0f, 1.0f, 0.0f, 0.5f   // Bottom left
+        //position              //uv                    //color
+         1.5f, -1.5f,  0.0f,    1.0f, 0.0f,         1.0f, 0.0f, 1.0f, 0.5f,  // Bottom right
+        -1.5f,  1.5f,  0.0f,    0.0f, 1.0f,         0.0f, 1.0f, 0.0f, 0.5f,  // Top left
+         1.5f,  1.5f,  0.0f,    1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 0.5f,  // Top right
+        -1.5f, -1.5f, -0.0f,    0.0f, 0.0f,         1.0f, 1.0f, 0.0f, 0.5f,   // Bottom left
+         0.0f, -1.5f,  1.5f,    1.0f, 0.0f,         1.0f, 0.0f, 1.0f, 0.5f,  // Bottom right
+         0.0f,  1.5f, -1.5f,    0.0f, 1.0f,         0.0f, 1.0f, 0.0f, 0.5f,  // Top left
+         0.0f,  1.5f,  1.5f,    1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 0.5f,  // Top right
+        -0.0f, -1.5f, -1.5f,    0.0f, 0.0f,         1.0f, 1.0f, 0.0f, 0.5f   // Bottom left
     };
 
     private int[] elementArray = {
@@ -43,7 +39,7 @@ public class TestScene extends Scene {
         4,5,7
     };
 
-    private  int vaoID, vboID, eboId;
+
 
     @Override
     void update(float dt) {
@@ -57,24 +53,13 @@ public class TestScene extends Scene {
         defaultShader.uploadMat4f("uView",camera.getView());
         defaultShader.uploadMat4f("uProjection", camera.getProjection());
         defaultShader.uploadFloat("uTime", Time.getTime());
+        defaultShader.createAndBindAndUploadTexture("assets/frog.png", "textureSampler");
 
-
-
-        // Bind the VAO
-        glBindVertexArray(vaoID);
-
-        // Enable the vertex attribute pointers
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
+        vao.bind();
 
         glDrawElements(GL_TRIANGLES, elementArray.length, GL_UNSIGNED_INT, 0);
 
-        // unbind everything
-
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-
-        glBindVertexArray(0);
+        vao.unbind();
 
         defaultShader.detach();
 
@@ -98,42 +83,13 @@ public class TestScene extends Scene {
         // Accept fragment if it closer to the camera than the former one
         glDepthFunc(GL_LESS);
 
-        vaoID = glGenVertexArrays();
-        glBindVertexArray(vaoID);
+        vao = new Vao(vertexArray, elementArray, new int[] {3,2,4});
+        vao.create();
 
-        // Create a float buffer of vertices
-
-        FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(vertexArray.length);
-        vertexBuffer.put(vertexArray).flip();   // flip is important
-
-        // Create VBO and vertex buffer
-
-        vboID = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
-
-        // Create indices and upload
-
-        IntBuffer elementBuffer = BufferUtils.createIntBuffer(elementArray.length);
-        elementBuffer.put(elementArray).flip(); // flip is important
-
-
-        eboId = glGenBuffers();
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboId);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementBuffer, GL_STATIC_DRAW);
-
-        // Add vertex attribute pointers
-        int positionsSize = 3;
-        int colorSize = 4;
-        int floatSizeBytes = 4;
-        int vertexSizeBytes = (positionsSize + colorSize) * floatSizeBytes;
-        glVertexAttribPointer(0, positionsSize, GL_FLOAT,false, vertexSizeBytes,0);
-        glEnableVertexAttribArray(0);
-
-        glVertexAttribPointer(1, colorSize, GL_FLOAT,false, vertexSizeBytes,positionsSize*floatSizeBytes);
-        glEnableVertexAttribArray(1);
 
 
     }
+
+
 
 }

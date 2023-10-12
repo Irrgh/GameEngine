@@ -16,12 +16,17 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL20.glGetShaderInfoLog;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class Shader {
 
@@ -32,6 +37,9 @@ public class Shader {
     private String vertexSource;
     private String fragmentSource;
     private String filePath;
+
+    private HashMap <String,Integer> loadedTextures = new HashMap<>();
+
 
     public Shader (String filePath) {
         this.filePath = filePath;
@@ -142,6 +150,12 @@ public class Shader {
     }
 
 
+
+
+
+
+
+
     public void use () {
         if (!isUsed) {
             isUsed = true;
@@ -216,36 +230,43 @@ public class Shader {
 
     public void createAndBindAndUploadTexture (String filePath, String varName) {
 
-
-        int[] width = new int[1];
-        int[] height = new int[1];
-        int[] channels = new int[1];
-        ByteBuffer imageBuffer = STBImage.stbi_load("path/to/texture.png", width, height, channels, 4); // 4 channels for RGBA
+        if (!loadedTextures.containsKey(filePath)) {
 
 
+            int[] width = new int[1];
+            int[] height = new int[1];
+            int[] channels = new int[1];
+            ByteBuffer imageBuffer = STBImage.stbi_load(filePath, width, height, channels, 4); // 4 channels for RGBA
 
 
-        int textureID = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, textureID);
+            int textureID = glGenTextures();
+            glBindTexture(GL_TEXTURE_2D, textureID);
+            int error = glGetError();
+            if (error != GL_NO_ERROR) {
+                System.err.println("OpenGL Error: " + error);
+            }
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width[0], height[0], 0, GL_BGRA, GL_UNSIGNED_BYTE, imageBuffer);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width[0], height[0], 0, GL_RGBA, GL_UNSIGNED_BYTE, imageBuffer);
 
-        STBImage.stbi_image_free(imageBuffer);
-
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        // Render the object using the bound texture
-
-        // Set the uniform in the shader program to the texture unit index
-        int textureUniformLocation = glGetUniformLocation(shaderProgramId, "textureSampler");
-        glUniform1i(textureUniformLocation, 0); // 0 corresponds to GL_TEXTURE0
+            STBImage.stbi_image_free(imageBuffer);
 
 
+            glBindTexture(GL_TEXTURE_2D, textureID);
+            loadedTextures.put(filePath, textureID);
+            System.out.println(loadedTextures.size());
 
+
+            // Render the object using the bound texture
+
+            // Set the uniform in the shader program to the texture unit index
+            int textureUniformLocation = glGetUniformLocation(shaderProgramId, varName);
+            glUniform1i(textureUniformLocation, 0); // 0 corresponds to GL_TEXTURE0
+        }
 
     }
 
