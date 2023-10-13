@@ -1,6 +1,7 @@
 package engine;
 
 import org.joml.Vector3f;
+import renderer.Mesh;
 import renderer.Vao;
 import renderer.Shader;
 import util.Time;
@@ -19,6 +20,8 @@ public class TestScene extends Scene {
     private Shader defaultShader;
 
     private Vao vao;
+
+    private Mesh mesh;
 
     private float[] vertexArray = {
         //position              //uv                    //color
@@ -53,13 +56,15 @@ public class TestScene extends Scene {
         defaultShader.uploadMat4f("uView",camera.getView());
         defaultShader.uploadMat4f("uProjection", camera.getProjection());
         defaultShader.uploadFloat("uTime", Time.getTime());
-        defaultShader.createAndBindAndUploadTexture("assets/frog.png", "textureSampler");
 
-        vao.bind();
+
+        //vao.bind();
+        mesh.bind();
 
         glDrawElements(GL_TRIANGLES, elementArray.length, GL_UNSIGNED_INT, 0);
 
-        vao.unbind();
+        mesh.unbind();
+        //vao.unbind();
 
         defaultShader.detach();
 
@@ -70,8 +75,10 @@ public class TestScene extends Scene {
         this.camera = new Camera(new Vector3f(-0.5f,-1.5f,0.4f), new Vector3f( 0.5f, 0.3f, -0.1f).normalize());
         defaultShader = new Shader("assets/shaders/default.glsl");
         defaultShader.compile();
+        mesh =Mesh.loadObj("assets/cube.obj");
+        mesh.create();
 
-
+        defaultShader.createAndBindAndUploadTexture("assets/frog.png", "textureSampler");
 
         // ========================================================
         // Generate VAO, VBO and EBO buffer objects and send to GPU

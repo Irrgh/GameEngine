@@ -110,7 +110,7 @@ public class Camera {
 
     public void updateProjection (){
         if (type == Projection.PERSPECTIVE) {
-            setPerspectiveProjection(fov, 16f/9f, 0.1f, 100);
+            setPerspectiveProjection(fov, 16f/9f, 0.1f, 1000);
         } else if (type == Projection.ORTHOGRAPHIC) {
             setOrthographicProjection(1000,1000,1,1000);
         }

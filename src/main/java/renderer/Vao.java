@@ -14,6 +14,7 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
+@Deprecated
 public class Vao {
 
     private float[] vertexArray ;
@@ -93,7 +94,6 @@ public class Vao {
             glDisableVertexAttribArray(i);
         }
 
-        glBindVertexArray(0);
 
     }
 
