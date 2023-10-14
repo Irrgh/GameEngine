@@ -1,5 +1,5 @@
 //type vertex
-#version 330 core
+#version 460 core
 
 layout (location=0) in vec3 aPos;
 layout (location=1) in vec2 aTex;
@@ -21,7 +21,7 @@ void main () {
 }
 
 //type fragment
-#version 330 core
+#version 460 core
 
 
 in vec4 Position;
@@ -34,10 +34,13 @@ uniform float uTime;
 
 out vec4 color;
 
+vec3 sun = vec3 (.1, .3, -.5);
+
+
 void main () {
     vec3 white = vec3(1,1,1);
     //color = texture (textureSampler, uv);
-    color = vec4(normal.xyz,1);
+    color = vec4(normal,1);
 }
 
 

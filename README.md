@@ -9,3 +9,8 @@ What can you currently do with this?
 
 
 ![tree imported from blender colored with normals](/assets/preview.png?raw=true)
+
+
+## Shortterm goals:
+- adding a ingame / extern console to better debug
+- other debug tools

@@ -1,16 +1,15 @@
 package renderer;
 
-import org.joml.Vector3f;
+
 import org.lwjgl.BufferUtils;
 
 import java.io.IOException;
-import java.io.SyncFailedException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL15.*;
@@ -50,7 +49,7 @@ public class Mesh {
     }
 
 
-    public static Mesh loadObj(String filePath) {
+    public static Mesh loadObj(String filePath)  {
 
 
         ArrayList<String> file = null;
@@ -81,7 +80,6 @@ public class Mesh {
 
             if (str.startsWith("v ")) {
 
-                str.substring(1);
                 String[] line = str.split(" ");
                 tempVertices.add(Float.parseFloat(line[1]));
                 tempVertices.add(Float.parseFloat(line[2]));
@@ -94,7 +92,7 @@ public class Mesh {
 
             if (str.startsWith("vt ")) {
 
-                str.substring(1);
+
                 String[] line = str.split(" ");
                 tempuvs.add(Float.parseFloat(line[1]));
                 tempuvs.add(Float.parseFloat(line[2]));
@@ -105,7 +103,7 @@ public class Mesh {
 
             if (str.startsWith("vn ")) {
 
-                str.substring(1);
+
                 String[] line = str.split(" ");
                 tempNormals.add(Float.parseFloat(line[1]));
                 tempNormals.add(Float.parseFloat(line[2]));
@@ -117,8 +115,8 @@ public class Mesh {
 
             if (str.startsWith("f ")) {
 
-                str.substring(1);
-                String[] line = str.split(" |/");
+
+                String[] line = str.split("[ /]");
 
                 facecount++;
 
@@ -176,19 +174,19 @@ public class Mesh {
             elementArray[i] = i;
         }
 
-        System.out.println(tempVertices);
-        System.out.println(tempVertices.size());
+        //System.out.println(tempVertices);
+        //System.out.println(tempVertices.size());
 
 
-        System.out.println(vertexIndices);
-        System.out.println(vertexIndices.size());
+        //System.out.println(vertexIndices);
+        //System.out.println(vertexIndices.size());
 
-        System.out.println(Arrays.toString(vertexArray));
-        System.out.println(vertexArray.length);
+        //System.out.println(Arrays.toString(vertexArray));
+        //System.out.println(vertexArray.length);
 
 
-        System.out.println(Arrays.toString(elementArray));
-        System.out.println(elementArray.length);
+        //System.out.println(Arrays.toString(elementArray));
+        //System.out.println(elementArray.length);
 
 
 
