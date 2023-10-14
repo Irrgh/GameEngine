@@ -1,8 +1,10 @@
 package renderer;
 
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
 import java.io.IOException;
+import java.io.SyncFailedException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.file.Files;
@@ -30,7 +32,6 @@ public class Mesh {
 
     // x,y,z,  u,v, xn,yn,zn
 
-    int[] attrLengthArray = {3,3,2};
     private int vboID, uvboId, norboId;
     private int vaoID;
     private int eboId;
@@ -43,6 +44,10 @@ public class Mesh {
         this.elementArray = elementArray;
     }
 
+
+    public int elementArraySize() {
+        return elementArray.length;
+    }
 
 
     public static Mesh loadObj(String filePath) {
@@ -134,38 +139,54 @@ public class Mesh {
 
         }
 
-        float[] vertexArray = new float[vertexIndices.size()];
+        float[] vertexArray = new float[facecount*3];
 
-        for (int i = 0; i < vertexIndices.size(); i++) {
+        for (int i = 0; i < vertexArray.length / 3; i++) {
 
-            int index = vertexIndices.get(i);
-            vertexArray[i] = tempVertices.get(index);
-
-        }
-
-        float[] uvArray = new float[uvIndices.size()];
-
-        for (int i = 0; i < uvIndices.size(); i++) {
-
-            int index = uvIndices.get(i);
-            uvArray[i] = tempuvs.get(index);
+            int index = (vertexIndices.get(i)-1)*3;
+            vertexArray[i*3] = tempVertices.get(index);
+            vertexArray[i*3+1] = tempVertices.get(index+1);
+            vertexArray[i*3+2] = tempVertices.get(index+2);
 
         }
 
-        float[] normalArray = new float[normalsIndices.size()];
+        float[] uvArray = new float[facecount*2];
+
+        for (int i = 0; i < uvArray.length / 2; i++) {
+
+            int index = (uvIndices.get(i)-1)*2;
+            uvArray[i*2] = tempuvs.get(index);
+            uvArray[i*2+1] = tempuvs.get(index+1);
+        }
+
+        float[] normalArray = new float[facecount*3];
         int[] elementArray = new int[facecount*3];
 
-        for (int i = 0; i < normalsIndices.size(); i++) {
+        for (int i = 0; i < normalArray.length / 3; i++) {
 
-            elementArray[i] = i+1;
-            int index = normalsIndices.get(i);
-            uvArray[i] = tempuvs.get(index);
-
+            int index = (normalsIndices.get(i)-1) * 3;
+            normalArray[i*3] = tempNormals.get(index);
+            normalArray[i*3+1] = tempNormals.get(index+1);
+            normalArray[i*3+1] = tempNormals.get(index+2);
         }
 
+        for (int i = 0; i < elementArray.length; i++) {
+            elementArray[i] = i;
+        }
+
+        System.out.println(tempVertices);
+        System.out.println(tempVertices.size());
 
 
+        System.out.println(vertexIndices);
+        System.out.println(vertexIndices.size());
 
+        System.out.println(Arrays.toString(vertexArray));
+        System.out.println(vertexArray.length);
+
+
+        System.out.println(Arrays.toString(elementArray));
+        System.out.println(elementArray.length);
 
 
 
@@ -203,7 +224,7 @@ public class Mesh {
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
         glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
         glVertexAttribPointer(0,  3, GL_FLOAT,false, 0,0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 
 
 
@@ -211,7 +232,7 @@ public class Mesh {
         glBindBuffer(GL_ARRAY_BUFFER, uvboId);
         glBufferData(GL_ARRAY_BUFFER, uvBuffer, GL_STATIC_DRAW);
         glVertexAttribPointer(1,  2, GL_FLOAT,false, 0,0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 
 
 
@@ -219,7 +240,7 @@ public class Mesh {
         glBindBuffer(GL_ARRAY_BUFFER,norboId);
         glBufferData(GL_ARRAY_BUFFER, normalBuffer, GL_STATIC_DRAW);
         glVertexAttribPointer(2,  3, GL_FLOAT,false, 0,0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 
         // Create indices and upload
 

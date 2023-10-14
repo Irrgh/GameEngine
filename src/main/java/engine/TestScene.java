@@ -61,7 +61,7 @@ public class TestScene extends Scene {
         //vao.bind();
         mesh.bind();
 
-        glDrawElements(GL_TRIANGLES, elementArray.length, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, mesh.elementArraySize(), GL_UNSIGNED_INT, 0);
 
         mesh.unbind();
         //vao.unbind();
@@ -90,8 +90,8 @@ public class TestScene extends Scene {
         // Accept fragment if it closer to the camera than the former one
         glDepthFunc(GL_LESS);
 
-        vao = new Vao(vertexArray, elementArray, new int[] {3,2,4});
-        vao.create();
+        //vao = new Vao(vertexArray, elementArray, new int[] {3,2,4});
+        //vao.create();
 
 
 
