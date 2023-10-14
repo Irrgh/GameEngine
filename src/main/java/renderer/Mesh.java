@@ -139,6 +139,8 @@ public class Mesh {
 
         }
 
+        facecount *=3;   // TODO I'll look into how to make this more beautiful
+
         float[] vertexArray = new float[facecount*3];
 
         for (int i = 0; i < vertexArray.length / 3; i++) {
@@ -160,14 +162,14 @@ public class Mesh {
         }
 
         float[] normalArray = new float[facecount*3];
-        int[] elementArray = new int[facecount*3];
+        int[] elementArray = new int[facecount];
 
         for (int i = 0; i < normalArray.length / 3; i++) {
 
             int index = (normalsIndices.get(i)-1) * 3;
             normalArray[i*3] = tempNormals.get(index);
             normalArray[i*3+1] = tempNormals.get(index+1);
-            normalArray[i*3+1] = tempNormals.get(index+2);
+            normalArray[i*3+2] = tempNormals.get(index+2);
         }
 
         for (int i = 0; i < elementArray.length; i++) {
@@ -251,6 +253,7 @@ public class Mesh {
 
 
 
+
     }
 
     public void bind () {
@@ -263,6 +266,7 @@ public class Mesh {
     }
 
     public void unbind () {
+
 
         glBindVertexArray(0);
         glDisableVertexAttribArray(0);

@@ -75,7 +75,7 @@ public class TestScene extends Scene {
         this.camera = new Camera(new Vector3f(-0.5f,-1.5f,0.4f), new Vector3f( 0.5f, 0.3f, -0.1f).normalize());
         defaultShader = new Shader("assets/shaders/default.glsl");
         defaultShader.compile();
-        mesh =Mesh.loadObj("assets/cube.obj");
+        mesh =Mesh.loadObj("assets/tree.obj");
         mesh.create();
 
         defaultShader.createAndBindAndUploadTexture("assets/frog.png", "textureSampler");

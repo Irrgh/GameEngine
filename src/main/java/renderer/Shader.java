@@ -258,7 +258,6 @@ public class Shader {
 
             glBindTexture(GL_TEXTURE_2D, textureID);
             loadedTextures.put(filePath, textureID);
-            System.out.println(loadedTextures.size());
 
 
             // Render the object using the bound texture
