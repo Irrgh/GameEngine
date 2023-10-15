@@ -12,5 +12,16 @@ What can you currently do with this?
 
 
 ## Shortterm goals:
-- adding a ingame / extern console to better debug
+
+- Entities that can instance meshes.
+- Multi-Draw Indirect (or indirect instanced rendering). This approach allows you to specify multiple draw calls with varying parameters in a single buffer, which is then processed efficiently by the GPU.
+- Optimize Mesh loader support:
+  - support loading materials as basic shaders
+  - optional interlaced vertex buffers
+  - optimized parsing
+  - reduce memory by joining identical vertexes (used by multiple tris).
+  - support non triangulated meshes
+
+
+- adding an in game / extern console to better debug
 - other debug tools

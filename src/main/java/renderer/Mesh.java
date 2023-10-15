@@ -2,6 +2,7 @@ package renderer;
 
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.assimp.Assimp;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
@@ -9,14 +10,20 @@ import java.nio.IntBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Map;
+import java.util.Scanner;
 
 
+import static org.lwjgl.assimp.Assimp.*;
+import static org.lwjgl.glfw.GLFW.glfwGetCurrentContext;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Mesh {
 
@@ -36,6 +43,8 @@ public class Mesh {
     private int eboId;
 
 
+
+
     private Mesh (float[] vertexArray, float[] uvArray, float[] normalArray, int[] elementArray) {
         this.vertexArray = vertexArray;
         this.uvArray = uvArray;
@@ -47,6 +56,38 @@ public class Mesh {
     public int elementArraySize() {
         return elementArray.length;
     }
+
+
+    public static void main (String[] args) {
+
+        Scanner scan = new Scanner(System.in);
+        String file = scan.nextLine();
+
+        long start = System.nanoTime();
+        for (int i = 0; i < 100; i++) {
+
+            //Mesh.loadObj(file);
+            aiImportFile(file, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+        }
+        long end = System.nanoTime();
+
+        System.out.println("Assimp:  loading 100 "+ file+ " took " + (end-start)*1E-6 + " ms");
+
+
+        start = System.nanoTime();
+        for (int i = 0; i < 100; i++) {
+
+            Mesh.loadObj(file);
+            //Assimp.aiImportFile(file,Assimp.aiProcess_Triangulate);
+        }
+        end = System.nanoTime();
+
+        System.out.println("Mine:  loading 100 "+ file+ " took " + (end-start)*1E-6 + " ms");
+
+
+
+    }
+
 
 
     public static Mesh loadObj(String filePath)  {
@@ -74,6 +115,9 @@ public class Mesh {
         }
 
 
+
+
+
         for (int i = 0; i < file.size(); i++) {
 
             String str = file.get(i);
@@ -86,8 +130,6 @@ public class Mesh {
                 tempVertices.add(Float.parseFloat(line[3]));
 
 
-
-
             }
 
             if (str.startsWith("vt ")) {
@@ -96,8 +138,6 @@ public class Mesh {
                 String[] line = str.split(" ");
                 tempuvs.add(Float.parseFloat(line[1]));
                 tempuvs.add(Float.parseFloat(line[2]));
-
-
 
             }
 
@@ -195,7 +235,12 @@ public class Mesh {
 
 
 
-    public void create () {
+    public void createBuffers () {
+
+        if (glfwGetCurrentContext() == NULL) {
+            throw new RuntimeException("No Open Gl Context configured");
+        }
+
 
         // Create a float buffer of vertices
 
@@ -256,6 +301,11 @@ public class Mesh {
 
     public void bind () {
 
+        if (glfwGetCurrentContext() == NULL) {
+            throw new RuntimeException("No Open Gl Context configured");
+        }
+
+
         glBindVertexArray(vaoID);
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
@@ -265,6 +315,9 @@ public class Mesh {
 
     public void unbind () {
 
+        if (glfwGetCurrentContext() == NULL) {
+            throw new RuntimeException("No Open Gl Context configured");
+        }
 
         glBindVertexArray(0);
         glDisableVertexAttribArray(0);
@@ -272,6 +325,12 @@ public class Mesh {
         glDisableVertexAttribArray(2);
 
     }
+
+
+    public int getVertexCount() {
+        return vertexArray.length;
+    }
+
 
 
 }

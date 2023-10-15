@@ -23,25 +23,6 @@ public class TestScene extends Scene {
 
     private Mesh mesh;
 
-    private float[] vertexArray = {
-        //position              //uv                    //color
-         1.5f, -1.5f,  0.0f,    1.0f, 0.0f,         1.0f, 0.0f, 1.0f, 0.5f,  // Bottom right
-        -1.5f,  1.5f,  0.0f,    0.0f, 1.0f,         0.0f, 1.0f, 0.0f, 0.5f,  // Top left
-         1.5f,  1.5f,  0.0f,    1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 0.5f,  // Top right
-        -1.5f, -1.5f, -0.0f,    0.0f, 0.0f,         1.0f, 1.0f, 0.0f, 0.5f,   // Bottom left
-         0.0f, -1.5f,  1.5f,    1.0f, 0.0f,         1.0f, 0.0f, 1.0f, 0.5f,  // Bottom right
-         0.0f,  1.5f, -1.5f,    0.0f, 1.0f,         0.0f, 1.0f, 0.0f, 0.5f,  // Top left
-         0.0f,  1.5f,  1.5f,    1.0f, 1.0f,         0.0f, 0.0f, 1.0f, 0.5f,  // Top right
-        -0.0f, -1.5f, -1.5f,    0.0f, 0.0f,         1.0f, 1.0f, 0.0f, 0.5f   // Bottom left
-    };
-
-    private int[] elementArray = {
-        2,1,0,  // Top right triangle
-        0,1,3,   // bottom left triangle
-        6,5,4,
-        4,5,7
-    };
-
 
 
     @Override
@@ -49,7 +30,7 @@ public class TestScene extends Scene {
         // Bind shader program
 
 
-        camera.update();
+        camera.update(dt);
 
 
         defaultShader.use();
@@ -63,6 +44,7 @@ public class TestScene extends Scene {
 
         glDrawElements(GL_TRIANGLES, mesh.elementArraySize(), GL_UNSIGNED_INT, 0);
 
+
         mesh.unbind();
         //vao.unbind();
 
@@ -75,8 +57,8 @@ public class TestScene extends Scene {
         this.camera = new Camera(new Vector3f(-0.5f,-1.5f,0.4f), new Vector3f( 0.5f, 0.3f, -0.1f).normalize());
         defaultShader = new Shader("assets/shaders/default.glsl");
         defaultShader.compile();
-        mesh =Mesh.loadObj("assets/tree.obj");
-        mesh.create();
+        mesh = Mesh.loadObj("assets/tree.obj");
+        mesh.createBuffers();
 
         defaultShader.createAndBindAndUploadTexture("assets/frog.png", "textureSampler");
 

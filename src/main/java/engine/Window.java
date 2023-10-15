@@ -90,7 +90,7 @@ public class Window {
 
             glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             glfwSetInputMode(glfwWindow, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
-            glfwSetCursorPos(glfwWindow, width,height);
+            glfwSetCursorPos(glfwWindow, width/2,height/2);
             MouseListener.setX(0);
             MouseListener.setY(0);    // TODO: fix the jerking when starting app
             System.out.println("supported");
@@ -126,6 +126,10 @@ public class Window {
 
         scene.init();
 
+        int framecount = 0;
+        float lastime = endTime;
+
+
         while (!glfwWindowShouldClose(glfwWindow)) {
 
             // Poll Events
@@ -136,17 +140,6 @@ public class Window {
 
             scene.update(dt);
 
-            if (KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)) {
-
-                if (scene.camera.rotationEnabled) {
-                    glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-                    scene.camera.rotationEnabled = false;
-                } else {
-                    glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-                    scene.camera.rotationEnabled = true;
-                }
-
-            }
 
 
 
@@ -158,7 +151,19 @@ public class Window {
             endTime = Time.getTime();
             dt = endTime - beginTime;
             beginTime = endTime;
-            //System.out.println("This frame took " + dt + "seconds to render");
+            framecount++;
+
+
+            if (endTime - lastime >= 1) {
+
+
+                System.out.println(1000d/framecount + " ms / frame");
+                framecount = 0;
+                lastime++;
+            }
+
+
+
         }
 
     }

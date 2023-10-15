@@ -23,6 +23,7 @@ project.ext.lwjglNatives = "natives-windows"
 
 
 dependencies {
+    implementation 'org.lwjgl:lwjgl-assimp:3.3.2'
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
     implementation "org.lwjgl:lwjgl"

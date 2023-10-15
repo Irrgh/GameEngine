@@ -8,7 +8,7 @@ import org.lwjgl.glfw.GLFW;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class Camera {
+public class Camera implements Tickable {
 
     private Matrix4f viewMatrix, projectionMatrix;
     private Vector3f position;
@@ -45,14 +45,17 @@ public class Camera {
     }
 
 
-    public void update () {
+    public void update (float dt) {
+
+        float distance = dt * 5;   // 10 units / s
+
 
         if (rotationEnabled) {
             rotate(MouseListener.getDx(), MouseListener.getDy());
         }
 
 
-        Vector3f newPos = new Vector3f(facing.x, facing.y, 0).normalize(0.01f);
+        Vector3f newPos = new Vector3f(facing.x, facing.y, 0).normalize(distance);
         if(KeyListener.isKeyPressed(GLFW_KEY_W)) {
             position.add(newPos);
         }
@@ -69,7 +72,7 @@ public class Camera {
             position.sub(newPos);
         }
 
-        newPos.set(new Vector3f(0,0,0.01f));
+        newPos.set(new Vector3f(0,0,distance));
 
         if (KeyListener.isKeyPressed(GLFW_KEY_SPACE)) {
             position.add(newPos);
