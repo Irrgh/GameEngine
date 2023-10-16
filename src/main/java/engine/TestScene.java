@@ -1,5 +1,6 @@
 package engine;
 
+import engine.entities.Camera;
 import org.joml.Vector3f;
 import renderer.Mesh;
 import renderer.Vao;
@@ -7,7 +8,6 @@ import renderer.Shader;
 import util.Time;
 
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class TestScene extends Scene {

@@ -1,5 +1,8 @@
-package engine;
+package engine.entities;
 
+import engine.KeyListener;
+import engine.MouseListener;
+import engine.Tickable;
 import org.joml.AxisAngle4f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
