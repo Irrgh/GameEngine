@@ -1,18 +1,21 @@
 package renderer;
 
 
+import engine.entities.Entity;
+import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.assimp.Assimp;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 
 import static org.lwjgl.assimp.Assimp.*;
@@ -23,9 +26,17 @@ import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.opengl.GL33.glVertexAttribDivisor;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Mesh {
+
+    static final int ATTRIBUTE_INDEX_VERTEX = 0;
+    static final int ATTRIBUTE_INDEX_UV = 1;
+    static final int ATTRIBUTE_INDEX_NORMAL = 2;
+    static final int ATTRIBUTE_INDEX_MODEL_TRANSFORM = 3;
+
+    static final int ATTRIBUTE_INDEX_MATERIAL = 7;
 
     float[] vertexArray;
 
@@ -36,12 +47,14 @@ public class Mesh {
     int[] elementArray;
 
 
-    // x,y,z,  u,v, xn,yn,zn
 
     private int vboID, uvboId, norboId;
     private int vaoID;
     private int eboId;
 
+    private int mmbID;  // model matrix buffer
+
+    private ArrayList<Entity> instancedBy;
 
 
 
@@ -50,6 +63,7 @@ public class Mesh {
         this.uvArray = uvArray;
         this.normalArray = normalArray;
         this.elementArray = elementArray;
+        this.instancedBy = new ArrayList<>();
     }
 
 
@@ -306,10 +320,16 @@ public class Mesh {
         }
 
 
-        glBindVertexArray(vaoID);
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-        glEnableVertexAttribArray(2);
+
+
+            glBindVertexArray(vaoID);
+            glEnableVertexAttribArray(0);
+            glEnableVertexAttribArray(1);
+            glEnableVertexAttribArray(2);
+            glEnableVertexAttribArray(3);
+            glEnableVertexAttribArray(4);
+            glEnableVertexAttribArray(5);
+            glEnableVertexAttribArray(6);
 
     }
 
@@ -323,13 +343,75 @@ public class Mesh {
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glDisableVertexAttribArray(2);
+        glDisableVertexAttribArray(3);
+        glDisableVertexAttribArray(4);
+        glDisableVertexAttribArray(5);
+        glDisableVertexAttribArray(6);
 
     }
+
+    public void bindInstanced () {
+
+        Matrix4f[] data = new Matrix4f[instancedBy.size()];
+
+        for (int i = 0; i < instancedBy.size(); i++) {
+            data[i] = instancedBy.get(i).getWorldTransform();
+        }
+
+
+        mmbID = glGenBuffers();
+
+
+        float[] matBuffer = new float[data.length*16];
+
+
+        for (int i = 0; i < data.length; i++) {
+            data[i].get(matBuffer, i*16);
+        }
+
+        //System.out.println(Arrays.toString(matBuffer));
+
+
+
+
+        glBindBuffer(GL_ARRAY_BUFFER, mmbID);
+        glBufferData(GL_ARRAY_BUFFER, matBuffer, GL_STATIC_DRAW);
+
+
+
+
+        glVertexAttribPointer(3, 4, GL_FLOAT, false, 16*Float.BYTES, 0);
+        glVertexAttribPointer(4, 4, GL_FLOAT, false, 16*Float.BYTES, 4*Float.BYTES);
+        glVertexAttribPointer(5, 4, GL_FLOAT, false, 16*Float.BYTES, 8*Float.BYTES);
+        glVertexAttribPointer(6, 4, GL_FLOAT, false, 16*Float.BYTES, 12*Float.BYTES);
+
+
+        glVertexAttribDivisor(ATTRIBUTE_INDEX_MODEL_TRANSFORM, 1); // This makes the attribute instanced
+        glVertexAttribDivisor(ATTRIBUTE_INDEX_MODEL_TRANSFORM+1,1);
+        glVertexAttribDivisor(ATTRIBUTE_INDEX_MODEL_TRANSFORM+2,1);
+        glVertexAttribDivisor(ATTRIBUTE_INDEX_MODEL_TRANSFORM+3,1);
+        glEnableVertexAttribArray(ATTRIBUTE_INDEX_MODEL_TRANSFORM);
+        glEnableVertexAttribArray(ATTRIBUTE_INDEX_MODEL_TRANSFORM+1);
+        glEnableVertexAttribArray(ATTRIBUTE_INDEX_MODEL_TRANSFORM+2);
+        glEnableVertexAttribArray(ATTRIBUTE_INDEX_MODEL_TRANSFORM+3);
+
+
+
+
+    }
+
+
+    public static void instance (Mesh mesh, Entity instancer) {
+        mesh.instancedBy.add(instancer);
+    }
+
 
 
     public int getVertexCount() {
-        return vertexArray.length;
+        return vertexArray.length/3;
     }
+
+
 
 
 

@@ -1,14 +1,22 @@
 package engine;
 
 import engine.entities.Camera;
+import engine.entities.Entity;
 import org.joml.Vector3f;
+import org.lwjgl.system.MemoryUtil;
 import renderer.Mesh;
 import renderer.Vao;
 import renderer.Shader;
 import util.Time;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.opengl.GL31.glDrawElementsInstanced;
+import static org.lwjgl.opengl.GL43.GL_DEBUG_OUTPUT;
+import static org.lwjgl.opengl.GL43.glDebugMessageCallback;
 
 public class TestScene extends Scene {
 
@@ -19,7 +27,7 @@ public class TestScene extends Scene {
 
     private Shader defaultShader;
 
-    private Vao vao;
+    private ArrayList<Entity> entities;
 
     private Mesh mesh;
 
@@ -39,11 +47,13 @@ public class TestScene extends Scene {
         defaultShader.uploadFloat("uTime", Time.getTime());
 
 
-        //vao.bind();
         mesh.bind();
+        mesh.bindInstanced();
 
-        glDrawElements(GL_TRIANGLES, mesh.elementArraySize(), GL_UNSIGNED_INT, 0);
 
+
+
+        glDrawElementsInstanced(GL_TRIANGLES, mesh.elementArraySize(), GL_UNSIGNED_INT, 0, 50);
 
         mesh.unbind();
         //vao.unbind();
@@ -54,13 +64,37 @@ public class TestScene extends Scene {
 
     @Override
     void init() {
+
+        glDebugMessageCallback((source, type, id, severity, length, message, userParam) -> {
+            System.err.println("OpenGL Debug Message:");
+            System.err.println("  Source: " + source);
+            System.err.println("  Type: " + type);
+            System.err.println("  ID: " + id);
+            System.err.println("  Severity: " + severity);
+            System.err.println("  Message: " + MemoryUtil.memUTF8(message, length));
+        }, 0);
+        glEnable(GL_DEBUG_OUTPUT);
+
+
         this.camera = new Camera(new Vector3f(-0.5f,-1.5f,0.4f), new Vector3f( 0.5f, 0.3f, -0.1f).normalize());
+        //camera.setProjectionType(Camera.Projection.ORTHOGRAPHIC); TODO this doesnt work :(
         defaultShader = new Shader("assets/shaders/default.glsl");
         defaultShader.compile();
-        mesh = Mesh.loadObj("assets/tree.obj");
+        mesh = Mesh.loadObj("assets/monkey1.obj");
         mesh.createBuffers();
 
+        for (int i = 0; i < 50; i++) {
+            Vector3f pos = new Vector3f((float) Math.random()*20,(float) Math.random()*20,(float) Math.random()*5);
+            Mesh.instance(mesh, new Entity(pos));
+        }
+
+
+
+        mesh.bindInstanced();
+
+
         defaultShader.createAndBindAndUploadTexture("assets/frog.png", "textureSampler");
+
 
         // ========================================================
         // Generate VAO, VBO and EBO buffer objects and send to GPU
@@ -71,10 +105,6 @@ public class TestScene extends Scene {
         glEnable(GL_DEPTH_TEST);
         // Accept fragment if it closer to the camera than the former one
         glDepthFunc(GL_LESS);
-
-        //vao = new Vao(vertexArray, elementArray, new int[] {3,2,4});
-        //vao.create();
-
 
 
     }

@@ -2,7 +2,7 @@ package engine;
 
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.opengl.GL;
 import util.Time;
 
@@ -23,7 +23,7 @@ public class Window {
     private Window() {
         this.width = 1920/2;
         this.height = 1200/2;
-        this.title = "";
+        this.title = "Engine";
     }
 
 
@@ -67,10 +67,18 @@ public class Window {
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
         //glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
         //glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
-        glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+        glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
         glfwWindowHint(GLFW_SRGB_CAPABLE, GLFW_TRUE);
 
+
+        //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+        //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+
         // Create Window
+
+
 
 
         glfwWindow = glfwCreateWindow(this.width, this.height, this.title,NULL,NULL);

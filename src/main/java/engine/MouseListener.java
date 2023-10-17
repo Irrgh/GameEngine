@@ -1,5 +1,9 @@
 package engine;
 
+import engine.entities.Entity;
+
+import java.util.HashSet;
+
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
@@ -11,6 +15,9 @@ public class MouseListener {
 
     private boolean[] mouseButtonPressed = new boolean[3];
     private boolean isDragging;
+
+    private HashSet<Entity> subscribers;
+
 
     private MouseListener() {
         this.scrollX = 0;
@@ -112,5 +119,10 @@ public class MouseListener {
             return false;
         }
     }
+
+    public static void notify (Entity e) {
+        get().subscribers.add(e);
+    }
+
 
 }

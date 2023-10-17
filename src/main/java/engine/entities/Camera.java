@@ -11,7 +11,7 @@ import org.lwjgl.glfw.GLFW;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class Camera implements Tickable {
+public class Camera extends Entity implements Tickable {
 
     private Matrix4f viewMatrix, projectionMatrix;
     private Vector3f position;
@@ -29,6 +29,10 @@ public class Camera implements Tickable {
     public enum Projection {
         PERSPECTIVE,
         ORTHOGRAPHIC
+    }
+
+    public void setProjectionType(Projection proj) {
+        type = proj;
     }
 
 
@@ -126,7 +130,7 @@ public class Camera implements Tickable {
 
     public void setOrthographicProjection(float x, float y, float near, float far) {
         projectionMatrix.identity();
-        projectionMatrix.ortho(0.0f, x, 0.0f, y, near, far);
+        projectionMatrix.ortho(-x/2, x/2, -x/2, x/2, near, far);
     }
 
     public void setPerspectiveProjection(float fovy, float aspect, float near, float far) {
