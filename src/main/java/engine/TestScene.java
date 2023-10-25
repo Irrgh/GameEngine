@@ -2,6 +2,7 @@ package engine;
 
 import engine.entities.Camera;
 import engine.entities.Entity;
+import engine.sound.Sound;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 import renderer.Mesh;
@@ -53,7 +54,7 @@ public class TestScene extends Scene {
 
 
 
-        glDrawElementsInstanced(GL_TRIANGLES, mesh.elementArraySize(), GL_UNSIGNED_INT, 0, 50);
+        glDrawElementsInstanced(GL_TRIANGLES, mesh.elementArraySize(), GL_UNSIGNED_INT, 0, 1);
 
         mesh.unbind();
         //vao.unbind();
@@ -77,16 +78,18 @@ public class TestScene extends Scene {
 
 
         this.camera = new Camera(new Vector3f(-0.5f,-1.5f,0.4f), new Vector3f( 0.5f, 0.3f, -0.1f).normalize());
-        //camera.setProjectionType(Camera.Projection.ORTHOGRAPHIC); TODO this doesnt work :(
+        //camera.setProjectionType(Camera.Projection.ORTHOGRAPHIC);
         defaultShader = new Shader("assets/shaders/default.glsl");
         defaultShader.compile();
-        mesh = Mesh.loadObj("assets/monkey1.obj");
+        mesh = Mesh.loadObj("assets/tree.obj");
         mesh.createBuffers();
+        Mesh.instance(mesh, new Entity());
 
-        for (int i = 0; i < 50; i++) {
-            Vector3f pos = new Vector3f((float) Math.random()*20,(float) Math.random()*20,(float) Math.random()*5);
-            Mesh.instance(mesh, new Entity(pos));
-        }
+        Sound sound = new Sound("assets/dreaming.ogg", true);
+
+        sound.play();
+
+
 
 
 

@@ -42,7 +42,7 @@ out vec4 color;
 vec3 sunPos = vec3 (10,10, 15);
 vec3 suncolor = normalize (vec3 (255, 235, 179));
 float dist = distance (pos,sunPos);
-float lightpower = 100;
+float lightpower = 200;
 
 
 
@@ -51,7 +51,7 @@ void main () {
     vec4 col = texture(textureSampler, uv);
     vec3 white = vec3 (1,1,1);
     float cosTheta = clamp(dot(normal,normalize(sunPos- pos)),0,1);
-    color = vec4 ( normal * lightpower * cosTheta / (dist*dist),1);
+    color = vec4 ( (normal * 0.5)+ normal * lightpower * cosTheta / (dist*dist),1);
 
 }
 

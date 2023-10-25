@@ -1,5 +1,6 @@
 package engine;
 
+import engine.sound.SoundManager;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
@@ -20,6 +21,9 @@ public class Window {
 
     private static Window window = null;
 
+    private SoundManager soundManager;
+
+
     private Window() {
         this.width = 1920/2;
         this.height = 1200/2;
@@ -39,6 +43,9 @@ public class Window {
 
         init();
         loop();
+
+
+        soundManager.cleanup();
 
         // Free the memory
         glfwFreeCallbacks(glfwWindow);
@@ -115,6 +122,9 @@ public class Window {
 
         // Show the window
         glfwShowWindow(glfwWindow);
+
+        soundManager = new SoundManager();
+        soundManager.init();
 
         // This line is critical for LWJGL's interoperation with GLFW's
         // OpenGL context, or any context that is managed externally.

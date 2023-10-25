@@ -58,7 +58,7 @@ public class Camera extends Entity implements Tickable {
 
 
         if (rotationEnabled) {
-            rotate(MouseListener.getDx(), MouseListener.getDy());
+            rotate(MouseListener.getDx() , MouseListener.getDy());
         }
 
 
@@ -122,7 +122,7 @@ public class Camera extends Entity implements Tickable {
         if (type == Projection.PERSPECTIVE) {
             setPerspectiveProjection(fov, 16f/9f, 0.1f, 1000);
         } else if (type == Projection.ORTHOGRAPHIC) {
-            setOrthographicProjection(1000,1000,1,1000);
+            setOrthographicProjection(10,10,1,1000);
         }
 
     }
