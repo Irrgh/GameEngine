@@ -12,7 +12,7 @@ import static org.lwjgl.opengl.GL15.*;
 public class Entity {
 
     protected Vector3f facing;
-    protected Vector3f origin;
+    protected Vector3f position;
 
     protected Vector3f scale;
     protected Quaternionf rotation;
@@ -29,7 +29,7 @@ public class Entity {
     public Entity () {
         orientation = new Quaternionf();
         rotation = new Quaternionf().rotateZ(45);
-        origin = new Vector3f(0,0,0);
+        position = new Vector3f(0,0,0);
         facing = new Vector3f(0,1,0);
         scale = new Vector3f(1,1,1);
         mesh = null;
@@ -42,7 +42,7 @@ public class Entity {
 
     public Entity (Vector3f position) {
         this();
-        this.origin = position;
+        this.position = position;
     }
     
 
@@ -54,13 +54,24 @@ public class Entity {
 
         Matrix4f mat = new Matrix4f();
 
-        return mat.translationRotateScale(origin,rotation,scale);
+        return mat.translationRotateScale(position,rotation,scale);
     }
 
 
+    public Vector3f getPosition () {
+        return position;
+    }
+
+    public Vector3f getFacing () {
+        return facing;
+    }
+
+    public Vector3f getScale () {
+        return scale;
+    }
 
     public void setPosition (Vector3f pos) {
-        origin.set(pos);
+        position.set(pos);
     }
 
     public void setRotationX (float angle) {

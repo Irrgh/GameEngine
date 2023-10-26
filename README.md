@@ -8,7 +8,7 @@ What can you currently do with this?
 - Explore your 3d-model in either orthographic or perspective camera mode
 
 
-![tree imported from blender colored with normals](/assets/preview.png?raw=true)
+![tree imported from blender colored with normals](/assets/models/preview.png?raw=true)
 
 
 ## Shortterm goals:

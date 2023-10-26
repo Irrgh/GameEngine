@@ -3,23 +3,23 @@ package engine.entities;
 import engine.KeyListener;
 import engine.MouseListener;
 import engine.Tickable;
-import org.joml.AxisAngle4f;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.openal.AL10;
+
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.openal.AL10.AL_NO_ERROR;
+import static org.lwjgl.openal.AL10.alGetError;
 
 public class Camera extends Entity implements Tickable {
 
     private Matrix4f viewMatrix, projectionMatrix;
-    private Vector3f position;
 
-
-    private Vector3f facing;
     private Vector3f cameraUp;
     private float fov;
+
+    private float orthographicScale;
 
     public boolean rotationEnabled = true;
     private float yaw, pitch;
@@ -55,6 +55,20 @@ public class Camera extends Entity implements Tickable {
     public void update (float dt) {
 
         float distance = dt * 5;   // 10 units / s
+
+        float[] pos = new float[] {position.x, position.y, position.z};
+        float[] or = new float[]{facing.x, facing.y, facing.z, cameraUp.x, cameraUp.y, cameraUp.z};
+
+        //System.out.println(Arrays.toString(pos));
+        //System.out.println(Arrays.toString(or));
+
+        AL10.alListener3f(AL10.AL_POSITION, position.x, position.y, position.z);    // TODO: DIRECTIONAL AUDIO DOESN'T FUCKING WORK
+        AL10.alListenerfv(AL10.AL_ORIENTATION, or);
+
+        int err = alGetError();
+        if (AL_NO_ERROR != err) {
+            System.err.println(err);
+        }
 
 
         if (rotationEnabled) {

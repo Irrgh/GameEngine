@@ -4,6 +4,7 @@ import engine.entities.Camera;
 import engine.entities.Entity;
 import engine.sound.Sound;
 import org.joml.Vector3f;
+import org.lwjgl.openal.AL10;
 import org.lwjgl.system.MemoryUtil;
 import renderer.Mesh;
 import renderer.Vao;
@@ -32,7 +33,7 @@ public class TestScene extends Scene {
 
     private Mesh mesh;
 
-
+    private Sound sound;
 
     @Override
     void update(float dt) {
@@ -51,7 +52,9 @@ public class TestScene extends Scene {
         mesh.bind();
         mesh.bindInstanced();
 
+        float volume = 0.3f / camera.getPosition().distance(new Vector3f());
 
+        //sound.setGain(volume);
 
 
         glDrawElementsInstanced(GL_TRIANGLES, mesh.elementArraySize(), GL_UNSIGNED_INT, 0, 1);
@@ -81,11 +84,11 @@ public class TestScene extends Scene {
         //camera.setProjectionType(Camera.Projection.ORTHOGRAPHIC);
         defaultShader = new Shader("assets/shaders/default.glsl");
         defaultShader.compile();
-        mesh = Mesh.loadObj("assets/tree.obj");
+        mesh = Mesh.loadObj("assets/models/tree.obj");
         mesh.createBuffers();
         Mesh.instance(mesh, new Entity());
 
-        Sound sound = new Sound("assets/dreaming.ogg", true);
+        sound = new Sound("assets/sounds/dreaming.ogg", true);
 
         sound.play();
 

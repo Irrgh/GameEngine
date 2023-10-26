@@ -44,8 +44,10 @@ public class Sound {
 
         if (channels == 1) {
             format = AL_FORMAT_MONO16;
+            System.out.println("mono");
         } else if (channels == 2) {
             format = AL_FORMAT_STEREO16;
+            System.out.println("stereo");
         }
 
         bufferId = alGenBuffers();
@@ -55,10 +57,17 @@ public class Sound {
         sourceId = alGenSources();
         alSourcei(sourceId, AL_BUFFER, bufferId);
         alSourcei(sourceId, AL_LOOPING, loops ? 1 : 0);
-        alSourcei(sourceId, AL_POSITION, 0);
-        alSourcef(sourceId, AL_GAIN, 0.3f);
+        alSourcef(sourceId, AL_GAIN, 0.5f);
+        alSource3f(sourceId, AL_POSITION, 0,0,0);
+        //alSource3f(sourceId, AL_DIRECTION, 0, 0, 0);
+        //alSourcei(sourceId, AL_SOURCE_RELATIVE, AL_TRUE);
 
-        free(rawAudioBuffer);
+        int err = alGetError();
+        if (AL_NO_ERROR != err) {
+            System.err.println(err);
+        }
+
+       // free(rawAudioBuffer);   this breaks 3d audio
     }
 
     public void delete () {
@@ -107,5 +116,11 @@ public class Sound {
         }
         return isPlaying;
     }
+
+    public void setGain (float gain) {
+        alSourcef(sourceId,AL_GAIN,gain);
+    }
+
+
 
 }
