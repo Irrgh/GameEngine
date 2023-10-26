@@ -1,6 +1,6 @@
 package engine;
 
-import engine.entities.Entity;
+import entity.Entity;
 
 import java.util.HashSet;
 

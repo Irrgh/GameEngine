@@ -1,20 +1,18 @@
-package engine.entities;
+package entity;
 
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import renderer.Mesh;
 
-import java.util.UUID;
-
-import static org.lwjgl.opengl.GL15.*;
 
 public class Entity {
 
     protected Vector3f facing;
     protected Vector3f position;
-
     protected Vector3f scale;
+
+    protected Vector3f velocity;
     protected Quaternionf rotation;
 
     protected Quaternionf orientation;

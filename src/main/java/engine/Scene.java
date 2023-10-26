@@ -1,6 +1,6 @@
 package engine;
 
-import engine.entities.Camera;
+import entity.Camera;
 
 public abstract class Scene {
 

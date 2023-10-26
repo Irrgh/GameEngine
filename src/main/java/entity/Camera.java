@@ -1,4 +1,4 @@
-package engine.entities;
+package entity;
 
 import engine.KeyListener;
 import engine.MouseListener;

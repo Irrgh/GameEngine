@@ -1,18 +1,16 @@
 package engine;
 
-import engine.entities.Camera;
-import engine.entities.Entity;
-import engine.sound.Sound;
+import entity.Camera;
+import entity.Entity;
+import entity.Speaker;
 import org.joml.Vector3f;
-import org.lwjgl.openal.AL10;
 import org.lwjgl.system.MemoryUtil;
 import renderer.Mesh;
-import renderer.Vao;
 import renderer.Shader;
+import util.AssetPool;
 import util.Time;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
@@ -33,7 +31,9 @@ public class TestScene extends Scene {
 
     private Mesh mesh;
 
-    private Sound sound;
+    private AssetPool assests;
+
+    private Speaker speaker;
 
     @Override
     void update(float dt) {
@@ -52,10 +52,6 @@ public class TestScene extends Scene {
         mesh.bind();
         mesh.bindInstanced();
 
-        float volume = 0.3f / camera.getPosition().distance(new Vector3f());
-
-        //sound.setGain(volume);
-
 
         glDrawElementsInstanced(GL_TRIANGLES, mesh.elementArraySize(), GL_UNSIGNED_INT, 0, 1);
 
@@ -68,6 +64,9 @@ public class TestScene extends Scene {
 
     @Override
     void init() {
+
+        assests = new AssetPool();
+        assests.addSound("assets/sounds/dreaming.ogg");
 
         glDebugMessageCallback((source, type, id, severity, length, message, userParam) -> {
             System.err.println("OpenGL Debug Message:");
@@ -87,10 +86,10 @@ public class TestScene extends Scene {
         mesh = Mesh.loadObj("assets/models/tree.obj");
         mesh.createBuffers();
         Mesh.instance(mesh, new Entity());
-
-        sound = new Sound("assets/sounds/dreaming.ogg", true);
-
-        sound.play();
+        speaker = new Speaker();
+        speaker.assignSound(assests.getSound("assets/sounds/dreaming.ogg"));
+        speaker.setGain(1.5f);
+        speaker.play();
 
 
 

@@ -1,9 +1,8 @@
 package engine;
 
-import engine.sound.SoundManager;
+import sound.SoundManager;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.opengl.GL;
 import util.Time;
 

@@ -1,21 +1,17 @@
 package renderer;
 
 
-import engine.entities.Entity;
+import entity.Entity;
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Scanner;
-import java.util.stream.Stream;
 
 
 import static org.lwjgl.assimp.Assimp.*;
