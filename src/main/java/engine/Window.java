@@ -104,7 +104,7 @@ public class Window {
 
             glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             glfwSetInputMode(glfwWindow, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
-            glfwSetCursorPos(glfwWindow, width/2,height/2);
+            glfwSetCursorPos(glfwWindow, width/2f,height/2f);
             MouseListener.setX(0);
             MouseListener.setY(0);    // TODO: fix the jerking when starting app
             System.out.println("supported");

@@ -63,7 +63,7 @@ public class Sound {
 
         bufferId = alGenBuffers();
         alBufferData(bufferId,format,rawAudioBuffer, sampleRate);
-
+        free(rawAudioBuffer);
     }
 
 

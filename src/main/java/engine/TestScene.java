@@ -56,8 +56,6 @@ public class TestScene extends Scene {
         glDrawElementsInstanced(GL_TRIANGLES, mesh.elementArraySize(), GL_UNSIGNED_INT, 0, 1);
 
         mesh.unbind();
-        //vao.unbind();
-
         defaultShader.detach();
 
     }
@@ -89,7 +87,9 @@ public class TestScene extends Scene {
         speaker = new Speaker();
         speaker.assignSound(assests.getSound("assets/sounds/dreaming.ogg"));
         speaker.setGain(1.5f);
+        speaker.setLooping(true);
         speaker.play();
+
 
 
 

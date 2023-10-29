@@ -6,9 +6,16 @@ What can you currently do with this?
 - Import triangulated .obj Models with xyz uv and normals.
 - Import Textures that can me mapped onto those objects with the uv
 - Explore your 3d-model in either orthographic or perspective camera mode
+- Load sounds and play them with speakers in space
+
 
 
 ![tree imported from blender colored with normals](/assets/models/preview.png?raw=true)
+
+
+# Goals:
+
+- Figuring out a proper architecture for game loop / asset management / events / multiplayer
 
 
 ## Shortterm goals:

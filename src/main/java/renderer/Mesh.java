@@ -316,8 +316,6 @@ public class Mesh {
         }
 
 
-
-
             glBindVertexArray(vaoID);
             glEnableVertexAttribArray(0);
             glEnableVertexAttribArray(1);
@@ -354,7 +352,7 @@ public class Mesh {
             data[i] = instancedBy.get(i).getWorldTransform();
         }
 
-
+        glDeleteBuffers(mmbID);    // maybe this fixes memory leak
         mmbID = glGenBuffers();
 
 
@@ -390,8 +388,6 @@ public class Mesh {
         glEnableVertexAttribArray(ATTRIBUTE_INDEX_MODEL_TRANSFORM+1);
         glEnableVertexAttribArray(ATTRIBUTE_INDEX_MODEL_TRANSFORM+2);
         glEnableVertexAttribArray(ATTRIBUTE_INDEX_MODEL_TRANSFORM+3);
-
-
 
 
     }

@@ -5,18 +5,16 @@ import engine.MouseListener;
 import engine.Tickable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjgl.openal.AL10;
 
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.openal.AL10.AL_NO_ERROR;
-import static org.lwjgl.openal.AL10.alGetError;
+import static org.lwjgl.openal.AL10.*;
 
 public class Camera extends Entity implements Tickable {
 
-    private Matrix4f viewMatrix, projectionMatrix;
+    private final Matrix4f viewMatrix, projectionMatrix;
 
-    private Vector3f cameraUp;
+    private final Vector3f cameraUp;
     private float fov;
 
     private float orthographicScale;
@@ -59,11 +57,10 @@ public class Camera extends Entity implements Tickable {
         float[] pos = new float[] {position.x, position.y, position.z};
         float[] or = new float[]{facing.x, facing.y, facing.z, cameraUp.x, cameraUp.y, cameraUp.z};
 
-        //System.out.println(Arrays.toString(pos));
-        //System.out.println(Arrays.toString(or));
 
-        AL10.alListener3f(AL10.AL_POSITION, position.x, position.y, position.z);    // TODO: DIRECTIONAL AUDIO DOESN'T FUCKING WORK
-        AL10.alListenerfv(AL10.AL_ORIENTATION, or);
+
+        alListenerfv(AL_POSITION, pos);
+        alListenerfv(AL_ORIENTATION, or);
 
         int err = alGetError();
         if (AL_NO_ERROR != err) {
@@ -112,7 +109,7 @@ public class Camera extends Entity implements Tickable {
     public void rotate (float x, float y) {
 
         yaw +=  Math.atan2(x,350f/2);
-        pitch -= Math.atan2(y, 350/2);
+        pitch -= Math.atan2(y, 350f/2);
         pitch = (float) (Math.max(0.001, Math.min(Math.PI-0.001, pitch)));
 
         //System.out.println("yaw: " + yaw + " pitch: " + pitch);

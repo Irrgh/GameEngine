@@ -28,9 +28,13 @@ public class Speaker extends Entity {
         alSourcei(sourceId, AL_BUFFER, sound.getBufferId());
     }
 
-    private void setLooping(boolean looping) {
+    public void setLooping(boolean looping) {
         isLooping = looping;
         alSourcei(sourceId,AL_LOOPING, looping ? 1 : 0);
+    }
+
+    public boolean getLooping () {
+        return isLooping;
     }
 
 
